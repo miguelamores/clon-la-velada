@@ -38,7 +38,7 @@ const { title } = Astro.props;
   </head>
   <body>
     <Noise />
-    <SmokeBackground />
+    <!-- <SmokeBackground /> -->
     <div class="max-w-6xl px-10 pt-40 mx-auto">
       <slot />
     </div>
@@ -51,8 +51,13 @@ const { title } = Astro.props;
     --color-twitch: #9146ff;
     --color-twitch-ice: #f0f0ff;
 
-    --background-color: #bbb;
+    --background-color: #101010;
     --background-twitch: #000;
+  }
+
+  @font-face {
+    font-family: Stronger;
+    src: url("/fonts/Stronger.ttf") format("truetype");
   }
 
   .dark {

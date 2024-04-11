@@ -2,10 +2,22 @@
 import HeroLogo from "@/components/HeroLogo.astro";
 ---
 
-<section class="flex flex-col justify-center items-center">
-  <span
-    class="text-xluppercase text-secondary bg-primary px-6 py-1 mb-9 font-medium"
-    >Presentacion de la</span
-  >
-  <HeroLogo class="text-primary w-full h-auto md:w-[800px]" />
+<section class="flex flex-col justify-center items-center gap-4 lg:gap-9">
+  <h2 class="font-stronger -skew-y-6 text-4xl text-white">twitch.tv/ibai</h2>
+  <div class="relative">
+    <img
+      class="absolute inset-0 -z-10 m-auto block h-auto w-[400px] scale-[175%]"
+      src="/img/drawn-x-logo.png"
+      alt="Logo hand written la velada"
+    />
+    <div
+      class="absolute inset-0 -z-10 m-auto size-[400px] rounded-full bg-black opacity-70 blur-2xl"
+    >
+    </div>
+
+    <HeroLogo class="text-primary w-[300px] h-auto md:w-[500px]" />
+    <HeroLogo
+      class="absolute inset-0 -z-10 text-[#f1ffaa] blur w-[300px] h-auto md:w-[500px]"
+    />
+  </div>
 </section>

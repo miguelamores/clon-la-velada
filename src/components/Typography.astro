@@ -1,0 +1,25 @@
+---
+import type { Code } from "astro:components";
+
+const { as: Tag, class: className, variant, color, ...props } = Astro.props;
+
+const variantClasses: { [key: string]: string } = {
+  h2: "text-lg font-medium uppercase lg:text-2xl",
+  h3: "text-2xl font-semibold uppercase",
+};
+
+const colorClasses = {
+  white: "text-white",
+  black: "text-black",
+};
+
+const classes = [
+  variantClasses[variant as keyof typeof variantClasses],
+  colorClasses[color as keyof typeof colorClasses],
+  className,
+];
+---
+
+<Tag class:list={classes} {...props} tabindex="0">
+  <slot />
+</Tag>

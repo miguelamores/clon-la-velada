@@ -15,7 +15,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
     <article class="flex w-full flex-col items-center justify-center relative">
       <header
         class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
-        style="background-image: url('/img/effects/boxer-background.png');"
+        style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
       >
         <img
           src="/img/boxers/el-mariana-big.webp"
@@ -70,13 +70,17 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
   <aside class="mt-44 grid gap-x-10 gap-y-4">
     {
-      listOfBoxers.map(({ id, name }) => (
+      listOfBoxers.map(({ id, name, country, countryName }) => (
         <a
           target="_blank"
           rel="noopener noreferer"
           href={`/boxers/${id}`}
           title={`Visit the page of ${name} boxer`}
           class="boxer-link group relative flex h-20 justify-center items-center"
+          data-id={id}
+          data-name={name}
+          data-country={country}
+          data-country-name={countryName}
         >
           <img
             loading="lazy"
@@ -89,6 +93,31 @@ const listOfBoxers = BOXERS.map((boxer) => {
     }
   </aside>
 </section>
+<script>
+  const boxerLinks = document.querySelectorAll(".boxer-link");
+  const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement;
+  const boxerPhoto = document.querySelector(".boxer-photo") as HTMLImageElement;
+  const boxerCountry = document.querySelector(
+    ".boxer-flag"
+  ) as HTMLImageElement;
+
+  boxerLinks.forEach((link) => {
+    link.addEventListener("mouseenter", (event) => {
+      const { id, name, country, countryName } = event.currentTarget.dataset;
+
+      const boxerSrc = `/img/boxers/${id}-big.webp`;
+      const titleSrc = `/img/boxers/${id}-title.webp`;
+
+      boxerTitle.src = titleSrc;
+      boxerPhoto.src = boxerSrc;
+      boxerCountry.src = `/img/flags/${country}.webp`;
+
+      boxerPhoto.alt = `Picture of ${name}`;
+      boxerTitle.alt = name;
+      boxerCountry.alt = `Flag of ${countryName}`;
+    });
+  });
+</script>
 
 <style>
   .boxer-link {

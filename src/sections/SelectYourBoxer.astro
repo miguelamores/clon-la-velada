@@ -2,12 +2,17 @@
 import { BOXERS } from "@/consts/boxers";
 import { COUNTRIES } from "@/consts/countries";
 import Typography from "@/components/Typography.astro";
+import BoxerBigImage from "@/components/BoxerBigImage.astro";
 
 const listOfBoxers = BOXERS.map((boxer) => {
   const { country } = boxer;
   const countryName = COUNTRIES[country]?.name || "";
   return { ...boxer, countryName };
 });
+
+const selectedBoxerId = Astro.url.searchParams.get("boxer");
+const selectedBoxer =
+  listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0];
 ---
 
 <section class="my-40">
@@ -17,7 +22,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
         class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
         style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
       >
-        <img
+        <!-- <img
           src="/img/boxers/el-mariana-big.webp"
           alt="Picture El Mariana"
           class="boxer-photo h-auto w-[480px]"
@@ -32,6 +37,13 @@ const listOfBoxers = BOXERS.map((boxer) => {
           src="/img/flags/mx.webp"
           alt="Mexico flag"
           class="boxer-flag h-auto w-24"
+        /> -->
+        <BoxerBigImage
+          id={selectedBoxer.id}
+          name={selectedBoxer.name}
+          country={selectedBoxer.country}
+          countryName={selectedBoxer.countryName}
+          loading={selectedBoxerId ? "eager" : "lazy"}
         />
       </header>
       <footer
@@ -59,14 +71,14 @@ const listOfBoxers = BOXERS.map((boxer) => {
     </article>
   </div>
 
-  <Typography
+  <!-- <Typography
     as="h3"
     variant="stronger-title"
     color="white"
     class:list={"text-center"}
   >
     CHOOSE YOUR FIGHTER
-  </Typography>
+  </Typography> -->
 
   <aside class="mt-44 grid gap-x-10 gap-y-4">
     {

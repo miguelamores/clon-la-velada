@@ -3,6 +3,7 @@ import { BOXERS } from "@/consts/boxers";
 import { COUNTRIES } from "@/consts/countries";
 import Typography from "@/components/Typography.astro";
 import BoxerBigImage from "@/components/BoxerBigImage.astro";
+import ColumnBoxers from "@/components/ColumnBoxers.astro";
 
 const listOfBoxers = BOXERS.map((boxer) => {
   const { country } = boxer;
@@ -13,72 +14,75 @@ const listOfBoxers = BOXERS.map((boxer) => {
 const selectedBoxerId = Astro.url.searchParams.get("boxer");
 const selectedBoxer =
   listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0];
+
+const boxerColumns = [
+  listOfBoxers.slice(0, 6),
+  listOfBoxers.slice(6, 11),
+  listOfBoxers.slice(11, 16),
+  listOfBoxers.slice(16, 22),
+];
 ---
 
 <section class="my-40">
-  <div class="mt-40">
-    <article class="flex w-full flex-col items-center justify-center relative">
-      <header
-        class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
-        style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
-      >
-        <!-- <img
-          src="/img/boxers/el-mariana-big.webp"
-          alt="Picture El Mariana"
-          class="boxer-photo h-auto w-[480px]"
-          style="filter: drop-shadow(0 0 10px rgba(0,0,0,1));"
-        />
-        <img
-          src="/img/boxers/el-mariana-title.webp"
-          alt="El Mariana title"
-          class="boxer-title absolute bottom-14 h-auto w-[480px]"
-        />
-        <img
-          src="/img/flags/mx.webp"
-          alt="Mexico flag"
-          class="boxer-flag h-auto w-24"
-        /> -->
-        <BoxerBigImage
-          id={selectedBoxer.id}
-          name={selectedBoxer.name}
-          country={selectedBoxer.country}
-          countryName={selectedBoxer.countryName}
-          loading={selectedBoxerId ? "eager" : "lazy"}
-        />
-      </header>
-      <footer
-        class="flex w-full justify-between absolute bottom-0 text-white text-center"
-      >
-        <div class="flex flex-col gap-y-2">
-          <h4 class="text-lg">Country</h4>
-          <p class="text-lg font-bold">Mexico</p>
-          <a
-            href="#"
-            class="hover:scale-125 transition inline-block mt-10 font-semibold text-accent"
-            >See combat</a
-          >
-        </div>
-        <div class="flex flex-col gap-y-2">
-          <h4 class="text-lg">Weight</h4>
-          <p class="text-lg font-bold">61 kg</p>
-          <a
-            href="#"
-            class="hover:scale-125 transition inline-block mt-10 font-semibold text-accent"
-            >See profile</a
-          >
-        </div>
-      </footer>
-    </article>
-  </div>
-
-  <!-- <Typography
+  <Typography
     as="h3"
     variant="stronger-title"
-    color="white"
+    color="primary"
     class:list={"text-center"}
+    id="selectedBoxer"
   >
     CHOOSE YOUR FIGHTER
-  </Typography> -->
+  </Typography>
+
+  <Typography as="p" variant="body" color="neutral" class="mt-4 text-center">
+    Conoce los detalles de cada boxeador
+  </Typography>
+
+  <div
+    class="mt-8 flex flex-col items-center justify-center gap-8 md:mt-32 md:flex-row lg:mt-0"
+  >
+    <article
+      class="relative flex w-full max-w-[70%] flex-col items-center justify-center md:absolute md:max-w-full lg:-mt-32"
+    >
+      <BoxerBigImage
+        id={selectedBoxer.id}
+        name={selectedBoxer.name}
+        country={selectedBoxer.country}
+        countryName={selectedBoxer.countryName}
+        loading={selectedBoxerId ? "eager" : "lazy"}
+      />
+    </article>
+
+    <div class="boxers-nav hidden w-full justify-between md:flex">
+      <nav class="boxers-lists flex h-full justify-start gap-4 py-4">
+        <ColumnBoxers
+          boxers={boxerColumns[0]}
+          selectedBoxer={selectedBoxer}
+          imgLoading={!selectedBoxerId ? "lazy" : undefined}
+        />
+        <ColumnBoxers
+          boxers={boxerColumns[1]}
+          selectedBoxer={selectedBoxer}
+          imgLoading={!selectedBoxerId ? "lazy" : undefined}
+          class="mt-12"
+        />
+      </nav>
+
+      <nav class="boxers-lists flex h-full justify-end gap-2 py-4">
+        <ColumnBoxers
+          boxers={boxerColumns[2]}
+          selectedBoxer={selectedBoxer}
+          class="mt-12"
+          imgLoading={!selectedBoxerId ? "lazy" : undefined}
+        />
+        <ColumnBoxers
+          boxers={boxerColumns[3]}
+          selectedBoxer={selectedBoxer}
+          imgLoading={!selectedBoxerId ? "lazy" : undefined}
+        />
+      </nav>
+    </div>
+  </div>
 
   <aside class="mt-44 grid gap-x-10 gap-y-4">
     {
@@ -106,6 +110,28 @@ const selectedBoxer =
   </aside>
 </section>
 <script>
+  document.addEventListener("astro:page-load", () => {
+    const boxerLinks = document.querySelectorAll(".boxer-link");
+    const boxerNav = document.querySelector(".boxers-nav");
+
+    if (!boxerNav) return;
+
+    const boxerTitle = document.querySelector(
+      ".boxer-title"
+    ) as HTMLImageElement;
+    const boxerPhoto = document.querySelector(
+      ".boxer-photo"
+    ) as HTMLPictureElement;
+    const boxerCountry = document.querySelector(
+      ".boxer-flag"
+    ) as HTMLImageElement;
+
+    const updatedSelectedBoxerId =
+      localStorage.getItem("selected:boxer") ||
+      new URLSearchParams(window.location.search).get("boxer") ||
+      "el-mariana";
+  });
+
   const boxerLinks = document.querySelectorAll(".boxer-link");
   const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement;
   const boxerPhoto = document.querySelector(".boxer-photo") as HTMLImageElement;

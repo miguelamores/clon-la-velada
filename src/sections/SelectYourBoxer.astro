@@ -163,7 +163,7 @@ const boxerColumns = [
 
       if (!id || !name || !country || !countryName) return;
 
-      const splitName = name.split("");
+      const splitName = name.split(" ");
       const lastName = splitName.at(-1);
       const firstNames = splitName.slice(0, splitName.length - 1).join(" ");
 
@@ -219,6 +219,16 @@ const boxerColumns = [
       boxerPhoto.getElementsByTagName("img")[0].alt = `Picture of ${name}`;
       boxerCountry.alt = `Flag of ${countryName}`;
     }
+
+    boxerLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const currentTarget = event.currentTarget as HTMLElement;
+        const boxerId = currentTarget.getAttribute("data-id");
+        if (boxerId)
+          localStorage.setItem("selected:boxer", JSON.stringify(boxerId));
+        activateBoxer(currentTarget, currentTarget, boxerNav, true);
+      });
+    });
 
     boxerLinks.forEach((link) => {
       link.addEventListener("mouseenter", (event) => {

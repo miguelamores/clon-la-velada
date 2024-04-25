@@ -112,7 +112,7 @@ const boxerColumns = [
 <script>
   document.addEventListener("astro:page-load", () => {
     const boxerLinks = document.querySelectorAll(".boxer-link");
-    const boxerNav = document.querySelector(".boxers-nav");
+    const boxerNav = document.querySelector(".boxers-nav") as HTMLElement;
 
     if (!boxerNav) return;
 
@@ -130,29 +130,102 @@ const boxerColumns = [
       localStorage.getItem("selected:boxer") ||
       new URLSearchParams(window.location.search).get("boxer") ||
       "el-mariana";
-  });
 
-  const boxerLinks = document.querySelectorAll(".boxer-link");
-  const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement;
-  const boxerPhoto = document.querySelector(".boxer-photo") as HTMLImageElement;
-  const boxerCountry = document.querySelector(
-    ".boxer-flag"
-  ) as HTMLImageElement;
+    const updatedSelectedBoxerElement: HTMLElement | null =
+      document.querySelector(`.boxer-link[data-id=${updatedSelectedBoxerId}]`);
 
-  boxerLinks.forEach((link) => {
-    link.addEventListener("mouseenter", (event) => {
-      const { id, name, country, countryName } = event.currentTarget.dataset;
+    if (updatedSelectedBoxerElement) {
+      activateBoxer(
+        updatedSelectedBoxerElement,
+        updatedSelectedBoxerElement,
+        boxerNav,
+        true
+      );
+    }
 
-      const boxerSrc = `/img/boxers/${id}-big.webp`;
-      const titleSrc = `/img/boxers/${id}-title.webp`;
+    function activateBoxer(
+      element: HTMLElement,
+      link: HTMLElement,
+      nav: HTMLElement,
+      replaceUrl: boolean = false,
+      showAlliesAndOpponents: boolean = true
+    ) {
+      if (element.classList.contains("active")) return;
 
-      boxerTitle.src = titleSrc;
-      boxerPhoto.src = boxerSrc;
+      const {
+        id,
+        name,
+        country,
+        countryName,
+        opponents = "",
+        allies = "",
+      } = element.dataset;
+
+      if (!id || !name || !country || !countryName) return;
+
+      const splitName = name.split("");
+      const lastName = splitName.at(-1);
+      const firstNames = splitName.slice(0, splitName.length - 1).join(" ");
+
+      const spanNames = `
+        <a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+          <span class="flex flex-col">
+            <span class="text-4xl">${firstNames.toLocaleLowerCase()}</span>
+            <span>${lastName?.toLocaleLowerCase()}</span>
+          </span>
+        </a>
+      `;
+
+      nav?.querySelector(".active")?.classList.remove("active");
+      nav
+        ?.querySelectorAll(".opponent")
+        ?.forEach((opponentEl) => opponentEl.classList.remove("opponent"));
+      nav
+        ?.querySelectorAll(".ally")
+        ?.forEach((allyEl) => allyEl.classList.remove("ally"));
+
+      link.classList.add("active");
+
+      if (showAlliesAndOpponents) {
+        allies.split(",").map((ally) => {
+          boxerLinks.forEach((link) => {
+            if (link.dataset.id === id) {
+              link.classList.add("ally");
+            }
+          });
+        });
+
+        opponents.split(",").map((opponent) => {
+          boxerLinks.forEach((link) => {
+            const { id: linkId, opponents: linkOpponents } = link.dataset;
+            if (
+              linkId === opponent ||
+              (linkOpponents === opponent && linkId !== id)
+            ) {
+              link.classList.add("opponent");
+            }
+          });
+        });
+      }
+
+      if (replaceUrl) {
+        history.replaceState({}, "", `?boxer=${id}`);
+      }
+
+      const boxerSrc = `/img/boxers/${id}-big`;
+      boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`;
+      boxerTitle.innerHTML = spanNames;
       boxerCountry.src = `/img/flags/${country}.webp`;
-
-      boxerPhoto.alt = `Picture of ${name}`;
-      boxerTitle.alt = name;
+      boxerPhoto.getElementsByTagName("img")[0].alt = `Picture of ${name}`;
       boxerCountry.alt = `Flag of ${countryName}`;
+    }
+
+    boxerLinks.forEach((link) => {
+      link.addEventListener("mouseenter", (event) => {
+        const currentTarget = event.currentTarget as HTMLElement;
+        if (currentTarget.classList.contains("active")) return;
+        activateBoxer(currentTarget, link, boxerNav, true);
+      });
     });
   });
 </script>

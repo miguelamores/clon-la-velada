@@ -3,6 +3,7 @@
 import "@fontsource-variable/jost";
 import Noise from "@/components/Noise.astro";
 import SmokeBackground from "@/components/SmokeBackground.astro";
+import { ViewTransitions } from "astro:transitions";
 
 interface Props {
   title: string;
@@ -35,6 +36,7 @@ const { title } = Astro.props;
       const isDark = window.getThemePreference() === "dark";
       document.documentElement.classList.toggle("dark", isDark);
     </script>
+    <ViewTransitions />
   </head>
   <body>
     <Noise />
@@ -42,36 +44,35 @@ const { title } = Astro.props;
     <div class="max-w-6xl px-10 pt-40 mx-auto">
       <slot />
     </div>
-  </body>
+  </body><style is:global>
+    :root {
+      --color-primary: #333;
+      --color-secondary: #ddd;
+      --color-accent: #d5ff00;
+
+      --color-twitch: #9146ff;
+      --color-twitch-ice: #f0f0ff;
+
+      --background-color: #101010;
+      --background-twitch: #000;
+    }
+
+    @font-face {
+      font-family: Stronger;
+      src: url("/fonts/Stronger.ttf") format("truetype");
+    }
+
+    .dark {
+      --color-primary: #ddd;
+      --color-secondary: #333;
+
+      --background-color: #333;
+      --background-twitch: var(--color-twitch-ice);
+    }
+
+    html {
+      font-family: "Jost Variable", system-ui, sans-serif;
+      background: var(--background-color);
+    }
+  </style>
 </html>
-<style is:global>
-  :root {
-    --color-primary: #333;
-    --color-secondary: #ddd;
-    --color-accent: #d5ff00;
-
-    --color-twitch: #9146ff;
-    --color-twitch-ice: #f0f0ff;
-
-    --background-color: #101010;
-    --background-twitch: #000;
-  }
-
-  @font-face {
-    font-family: Stronger;
-    src: url("/fonts/Stronger.ttf") format("truetype");
-  }
-
-  .dark {
-    --color-primary: #ddd;
-    --color-secondary: #333;
-
-    --background-color: #333;
-    --background-twitch: var(--color-twitch-ice);
-  }
-
-  html {
-    font-family: "Jost Variable", system-ui, sans-serif;
-    background: var(--background-color);
-  }
-</style>

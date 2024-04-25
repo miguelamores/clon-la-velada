@@ -6,7 +6,7 @@ interface Props {
   boxers: Boxer[];
   class?: string;
   selectedBoxer: Boxer;
-  imgLoading: HTMLAttributes<"img">["loading"];
+  imgLoading?: HTMLAttributes<"img">["loading"];
 }
 
 const { boxers, class: className, selectedBoxer, imgLoading } = Astro.props;

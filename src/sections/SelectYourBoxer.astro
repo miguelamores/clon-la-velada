@@ -84,30 +84,30 @@ const boxerColumns = [
     </div>
   </div>
 
-  <aside class="mt-44 grid gap-x-10 gap-y-4">
-    {
-      listOfBoxers.map(({ id, name, country, countryName }) => (
-        <a
-          target="_blank"
-          rel="noopener noreferer"
-          href={`/boxers/${id}`}
-          title={`Visit the page of ${name} boxer`}
-          class="boxer-link group relative flex h-20 justify-center items-center"
-          data-id={id}
-          data-name={name}
-          data-country={country}
-          data-country-name={countryName}
-        >
-          <img
-            loading="lazy"
-            src={`/img/boxers/${id}-small.webp`}
-            alt={`Small boxer image of ${name}`}
-            class="boxer-image w-full -mt-10 px-2 transition object-contain group-hover:scale-110"
-          />
-        </a>
-      ))
-    }
-  </aside>
+  <div
+    class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden"
+  >
+    <div
+      class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll"
+    >
+      <div
+        class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll"
+      >
+        {
+          listOfBoxers.map((boxer, index) => (
+            <div
+              class:list={`carousel-item w-[40%] flex-shrink-0 snap-center px-2
+                ${index === 0 ? "ml-[30%]" : ""}
+                ${index === listOfBoxers.length - 1} ? "mr-[30%]" : ""
+              `}
+            >
+              <ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
 </section>
 <script>
   document.addEventListener("astro:page-load", () => {
@@ -241,60 +241,42 @@ const boxerColumns = [
 </script>
 
 <style>
-  .boxer-link {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 40%,
-      transparent 100%
-    );
-    transition: all 0.5s ease;
+  .boxers-lists {
+    @apply relative w-screen overflow-x-scroll md:overflow-hidden;
+    scrollbar-width: none;
   }
 
-  .boxer-link::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    display: block;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 40%,
-      transparent 100%
-    );
-    opacity: 0;
-    height: 50%;
-    transition:
-      opacity 0.2s ease-in-out,
-      height 0.2s ease-in-out;
+  @media (min-width: 1280px) {
+    .boxers-lists {
+      @apply h-auto w-full max-w-none overflow-hidden py-2;
+    }
   }
 
-  .boxer-link:hover::before {
-    opacity: 0.8;
-    height: 90%;
-    box-shadow: 0 0px 3px rgba(50, 50, 50, 0.75);
-  }
+  @media (max-width: 768px) {
+    .carousel {
+      scrollbar-width: none;
+    }
 
-  .boxer-image {
-    transition: transform 0.3s ease-in-out;
-  }
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
 
-  .boxer-link:hover .boxer-image {
-    transform: scale(1.1);
-  }
+    .carousel-inner {
+      transition: transform 0.3s ease-in-out;
+      scrollbar-width: none;
+    }
 
-  aside {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: 80px;
+    .carousel-inner::-webkit-scrollbar {
+      display: none;
+    }
 
-    a {
-      grid-column: span 2;
+    .carousel-item {
+      transition: opacity 0.3s ease-in-out;
+    }
 
-      &:nth-child(11n + 7) {
-        grid-column-start: 2;
-        grid-column-end: 4;
-      }
+    .carousel-item.active {
+      opacity: 1;
+      scale: 1.2;
     }
   }
 </style>

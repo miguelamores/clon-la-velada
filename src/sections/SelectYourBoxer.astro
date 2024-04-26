@@ -237,6 +237,54 @@ const boxerColumns = [
         activateBoxer(currentTarget, link, boxerNav, true);
       });
     });
+
+    const carouselInner = document.querySelector(
+      ".carousel-inner"
+    ) as HTMLElement;
+
+    const mobileMediaQuery = window.matchMedia("(max-width: 768px)");
+
+    function highlightBoxer(link: HTMLAnchorElement) {
+      const rect = link.getBoundingClientRect();
+      const { width: carouselWidth } = carouselInner.getBoundingClientRect();
+
+      if (
+        rect.left > carouselWidth / 2 - rect.width * 0.75 &&
+        rect.left < carouselWidth / 2 + rect.width * 0.25
+      ) {
+        activateBoxer(link, link, carouselInner, false, false);
+      }
+    }
+
+    function highlightActiveBoxer() {
+      boxerLinks.forEach((link) => {
+        highlightBoxer(link);
+      });
+    }
+
+    function updateActiveThumbnailPosition() {
+      const boxer = new URLSearchParams(window.location.search).get("boxer");
+      const boxerActiveElement = document.querySelector(
+        `.carousel .boxer-link[data-id=${boxer}]`
+      ) as HTMLAnchorElement;
+
+      if (boxerActiveElement) {
+        const carouselWidth = carouselInner.clientWidth; // width without paddings, margins, borders and scroll
+        const thumbnailWidth = boxerActiveElement.offsetWidth; // width includes paddings, margins, borders and scroll
+        const currentPosition =
+          boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2;
+
+        carouselInner.scrollTo(currentPosition, 0);
+      }
+    }
+
+    if (mobileMediaQuery.matches) {
+      updateActiveThumbnailPosition();
+
+      carouselInner.addEventListener("scroll", () => {
+        highlightActiveBoxer();
+      });
+    }
   });
 </script>
 

@@ -1,17 +1,20 @@
 export const COUNTRIES: Record<string, { name: string }> = {
   mx: {
-    name: "Mexico",
-  },
-  us: {
-    name: "United States",
-  },
-  br: {
-    name: "Brazil",
-  },
-  ca: {
-    name: "Canada",
+    name: "México",
   },
   es: {
-    name: "Spain",
+    name: "España",
+  },
+  do: {
+    name: "República Dominicana",
+  },
+  ar: {
+    name: "Argentina",
+  },
+  co: {
+    name: "Colombia",
+  },
+  cl: {
+    name: "Chile",
   },
 } as const;

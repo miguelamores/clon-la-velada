@@ -1,0 +1,111 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import BoxerBigImage from "@/components/BoxerBigImage.astro";
+import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro";
+import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro";
+
+import { BOXERS } from "@/consts/boxers";
+import { COUNTRIES } from "@/consts/countries";
+import { COMBATS } from "@/consts/combats";
+import type { Boxer } from "@/types/Boxer";
+
+export const getStaticPaths = (() => {
+  return BOXERS.map(({ id }) => ({
+    params: { id },
+  }));
+}) satisfies GetStaticPaths;
+
+const { id } = Astro.params;
+
+const [boxer] = BOXERS.filter((boxer) => boxer.id === id);
+
+const combat = COMBATS.find((combat) => combat.boxers.includes(id));
+
+if (!combat) {
+  return new Response(JSON.stringify("Combat not found"), { status: 404 });
+}
+
+const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id));
+
+if (!boxers) {
+  return new Response(JSON.stringify("Boxers not found"), { status: 404 });
+}
+
+const countryName = COUNTRIES[boxer.country];
+
+let rivals: Boxer[] = [];
+if (typeof boxer.versus === "object") {
+  for (let vs of boxer.versus) {
+    rivals = rivals.concat(BOXERS.filter((rival) => rival.id === vs));
+  }
+} else {
+  rivals = boxers.filter((rival) => rival.id !== boxer.id);
+}
+
+const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival";
+const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard;
+const flagAlt = countryName === undefined ? "a country" : countryName.name;
+---
+
+<Layout title={`${boxer.name} - La Velada del Año IV`}>
+  <main>
+    <section>
+      <div class="flex w-full flex-col md:flex-row md:gap-10">
+        <div class="">
+          <!-- <BixerClips />-->
+          <div class="hidden md:block">
+            <BoxerDetailInfoRival
+              title={rivalOrRivals}
+              value={rivals}
+              id="boxer-rival-desk"
+            />
+          </div>
+        </div>
+
+        <div class="flex w-full flex-col md:w-1/4 md:gap-y-20"></div>
+
+        <div
+          class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 md:w-1/2 lg:mx-4"
+        >
+          <BoxerBigImage
+            id={id}
+            name={boxer.name}
+            country={boxer.country}
+            countryName={flagAlt}
+            loading="eager"
+          />
+        </div>
+
+        <div
+          class="order-3 mx-auto flex w-full max-w-[450px] flex-col md:w-auto md:max-w-none md:gap-y-20 lg:w-1/4"
+        >
+          <BoxerDetailInfo
+            title="Edad"
+            value={`${boxer.age} años`}
+            id="boxer-edad"
+          />
+          {
+            boxer.weight && (
+              <BoxerDetailInfo
+                title="Peso"
+                value={`${boxer.weight} kg`}
+                id="boxer-peso"
+              />
+            )
+          }
+          <BoxerDetailInfo
+            title="Altura"
+            value={`${boxer.height} m`}
+            id="boxer-altura"
+          />
+          <BoxerDetailInfo
+            title="Guardia"
+            value={guardBoxer}
+            id="boxer-guardia"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

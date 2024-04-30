@@ -5,10 +5,18 @@ import BoxerBigImage from "@/components/BoxerBigImage.astro";
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro";
 import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro";
 
+import Instagram from "@/icons/instagram.astro";
+import Tiktok from "@/icons/tiktok.astro";
+import Twitch from "@/icons/twitch.astro";
+import X from "@/icons/x.astro";
+import YouTube from "@/icons/youtube.astro";
+
 import { BOXERS } from "@/consts/boxers";
 import { COUNTRIES } from "@/consts/countries";
 import { COMBATS } from "@/consts/combats";
 import type { Boxer } from "@/types/Boxer";
+import Typography from "@/components/Typography.astro";
+import BoxerSocialLink from "@/components/BoxerSocialLink.astro";
 
 export const getStaticPaths = (() => {
   return BOXERS.map(({ id }) => ({
@@ -105,6 +113,35 @@ const flagAlt = countryName === undefined ? "a country" : countryName.name;
             id="boxer-guardia"
           />
         </div>
+      </div>
+    </section>
+    <section class="mt-20 md:mt-64">
+      <Typography
+        as="h3"
+        variant="h3"
+        color="white"
+        class:list={"mb-12 text-center"}
+      >
+        Social Media
+      </Typography>
+      <div
+        class="mx-auto flex max-w-[600px] flex-wrap justify-center gap-2 lg:max-w-full"
+      >
+        <BoxerSocialLink href={boxer.socials.twitch}>
+          <Twitch />
+        </BoxerSocialLink>
+        <BoxerSocialLink href={boxer.socials.instagram}>
+          <Instagram />
+        </BoxerSocialLink>
+        <BoxerSocialLink href={boxer.socials.twitter}>
+          <X />
+        </BoxerSocialLink>
+        <BoxerSocialLink href={boxer.socials.youtube}>
+          <YouTube />
+        </BoxerSocialLink>
+        <BoxerSocialLink href={boxer.socials.tiktok}>
+          <Tiktok />
+        </BoxerSocialLink>
       </div>
     </section>
   </main>

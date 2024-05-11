@@ -189,7 +189,7 @@ const boxerColumns = [
       if (showAlliesAndOpponents) {
         allies.split(",").map((ally) => {
           boxerLinks.forEach((link) => {
-            if (link.dataset.id === id) {
+            if (link.dataset.id === ally) {
               link.classList.add("ally");
             }
           });

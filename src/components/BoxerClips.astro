@@ -1,0 +1,50 @@
+---
+import Typography from "./Typography.astro";
+
+interface Props {
+  clips?: Array<{ text: string; url: string }>;
+}
+
+const { clips = [] } = Astro.props;
+const hasClips = clips?.length > 0;
+---
+
+{
+  hasClips && (
+    <section class="z-20 mx-auto mt-2 max-w-96 overflow-x-hidden py-5 md:mt-0">
+      <div class="carousel mx-auto flex max-w-96 select-none flex-row flex-nowrap px-4 transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+        {clips.map(({ text, url }, index) => (
+          <button
+            data-url={url}
+            data-clip-item
+            class:list={`clip-container group flex min-w-full flex-col justify-between hover:saturate-150 md:min-w-0 ${"block"} cursor-pointer md:block`}
+          >
+            <Typography
+              as="h3"
+              variant="stronger-quote"
+              color="primary"
+              class:list={
+                "flex flex-1 -skew-y-6 items-center justify-center text-pretty text-center transition group-hover:scale-110"
+              }
+            >
+              "{text.toLowerCase()}"
+            </Typography>
+
+            <footer class="flex items-end justify-center pt-2 text-center">
+              <Typography
+                as="p"
+                variant="small"
+                color="neutral"
+                class:list={
+                  "text-center opacity-0 transition group-hover:text-white group-hover:opacity-100"
+                }
+              >
+                See clip
+              </Typography>
+            </footer>
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}

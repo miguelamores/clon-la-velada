@@ -17,6 +17,7 @@ import { COMBATS } from "@/consts/combats";
 import type { Boxer } from "@/types/Boxer";
 import Typography from "@/components/Typography.astro";
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro";
+import BoxerClips from "@/components/BoxerClips.astro";
 
 export const getStaticPaths = (() => {
   return BOXERS.map(({ id }) => ({
@@ -58,10 +59,12 @@ const flagAlt = countryName === undefined ? "a country" : countryName.name;
 
 <Layout title={`${boxer.name} - La Velada del Año IV`}>
   <main>
-    <section>
+    <section class="relative flex flex-col items-center justify-center">
       <div class="flex w-full flex-col md:flex-row md:gap-10">
-        <div class="">
-          <!-- <BixerClips />-->
+        <div
+          class="left-10 order-2 flex w-full flex-col md:absolute md:order-1 md:w-[300px] md:gap-y-20"
+        >
+          <BoxerClips clips={boxer.clips} />
           <div class="hidden md:block">
             <BoxerDetailInfoRival
               title={rivalOrRivals}

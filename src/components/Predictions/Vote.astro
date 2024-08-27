@@ -1,0 +1,11 @@
+<section>
+  Votes
+  <button id='logout'>Logout</button>
+</section>
+
+<script>
+  const { signOut } = await import('auth-astro/client');
+
+  const $logout = document.querySelector('#logout');
+  if ($logout) $logout.onclick = () => signOut();
+</script>

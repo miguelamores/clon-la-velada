@@ -1,0 +1,46 @@
+---
+import Action from '@/components/Action.astro';
+import Typography from '@/components/Typography.astro';
+---
+
+<section class='relative flex min-h-96 flex-row justify-between lg:min-h-min'>
+  <div class='flex max-w-lg flex-col items-center justify-center px-10'>
+    <Typography
+      class='mb-10 -skew-y-6 text-wrap text-center'
+      color='primary'
+      as='h1'
+      variant={'atomic-title'}>¡make your prediction!</Typography
+    >
+    <Typography as='p' color='white' variant='body' class='mb-10'>
+      Make your prediction of who will win each match of the event. Share your
+      forecast on social networks and invite your friends to participate.
+    </Typography>
+    <Action
+      id='login'
+      class='w-full text-sm md:text-base'
+      as='button'
+      aria-label='User login'
+    >
+      ¡Sign in to participate!
+    </Action>
+    <small class='mt-2'>To participate, you need a google account</small>
+  </div>
+  <aside
+    class='absolute -z-10 opacity-20 lg:relative lg:opacity-100 text-center'
+  >
+    <img
+      alt='Imagen de La Velada IV con todos los luchadores'
+      src='/public/img/boxers/predictions-bg.png'
+      style='mask-image: linear-gradient(black 80%, transparent);'
+    />
+  </aside>
+</section>
+
+<script>
+  const { signIn, signOut } = await import('auth-astro/client');
+
+  const $login = document.querySelector('#login');
+  if ($login) $login.onclick = () => signIn('google');
+  const $logout = document.querySelector('#logout');
+  if ($logout) $logout.onclick = () => signOut();
+</script>

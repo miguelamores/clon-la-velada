@@ -1,4 +1,6 @@
 ---
+import Intro from '@/components/Predictions/Intro.astro';
+import Vote from '@/components/Predictions/Vote.astro';
 import Layout from '@/layouts/Layout.astro';
 import { getSession } from 'auth-astro/server';
 
@@ -8,13 +10,7 @@ console.log(session);
 
 <Layout title='This is where you can add predictions to the combats'>
   <main class='flex flex-col items-center justify-center text-white'>
-    {
-      session ? (
-        <button id='logout'>Cerrar sesion</button>
-      ) : (
-        <button id='login'>Iniciar sesion</button>
-      )
-    }
+    {session === null ? <Intro /> : <Vote />}
   </main>
 </Layout>
 

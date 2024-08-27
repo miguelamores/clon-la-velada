@@ -1,0 +1,28 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getSession } from 'auth-astro/server';
+
+const session = await getSession(Astro.request);
+console.log(session);
+---
+
+<Layout title='This is where you can add predictions to the combats'>
+  <main class='flex flex-col items-center justify-center text-white'>
+    {
+      session ? (
+        <button id='logout'>Cerrar sesion</button>
+      ) : (
+        <button id='login'>Iniciar sesion</button>
+      )
+    }
+  </main>
+</Layout>
+
+<script>
+  const { signIn, signOut } = await import('auth-astro/client');
+
+  const $login = document.querySelector('#login');
+  if ($login) $login.onclick = () => signIn('google');
+  const $logout = document.querySelector('#logout');
+  if ($logout) $logout.onclick = () => signOut();
+</script>
